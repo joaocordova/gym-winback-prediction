@@ -1,0 +1,60 @@
+{
+  "model_name": "lightgbm",
+  "estimator": "LGBMClassifier",
+  "package_version": "1.0.0",
+  "trained_at": "2026-07-02T00:45:22.531752+00:00",
+  "run_id": "20260702_004442_c467a7",
+  "decision_threshold": 0.07833622975685214,
+  "calibrated": false,
+  "best_params": {
+    "colsample_bytree": 0.7055483356151595,
+    "learning_rate": 0.012647893197062937,
+    "min_child_samples": 62,
+    "n_estimators": 368,
+    "num_leaves": 23,
+    "reg_lambda": 0.09989183779852141,
+    "subsample": 0.903768998836282
+  },
+  "feature_columns": [
+    "tenure_days",
+    "days_since_cancel",
+    "n_prior_contacts",
+    "visits_30d_precancel",
+    "visits_90d_precancel",
+    "visits_per_week_90d",
+    "visit_decline_ratio",
+    "active_weeks_ratio_12w",
+    "class_ratio_precancel",
+    "monthly_fee",
+    "age",
+    "cancel_reason",
+    "plan_type",
+    "gender",
+    "referral_source",
+    "channel",
+    "offer"
+  ],
+  "validation_metrics": {
+    "roc_auc": 0.7347002405202363,
+    "pr_auc": 0.2329182085247512,
+    "brier": 0.08056956209942584,
+    "log_loss": 0.28696596014098036,
+    "f1": 0.2636484687083888,
+    "precision": 0.15664556962025317,
+    "recall": 0.8319327731092437,
+    "precision_at_10pct": 0.248,
+    "lift_at_10pct": 2.607126050420168,
+    "base_reactivation_rate": 0.09512390087929656,
+    "threshold": 0.07833622975685214
+  },
+  "candidates": {
+    "logistic": {
+      "cv_pr_auc": 0.2634166865960774,
+      "val_pr_auc": 0.20847581744649474
+    },
+    "lightgbm": {
+      "cv_pr_auc": 0.23750187933259403,
+      "val_pr_auc": 0.2268020195093136
+    }
+  }
+}

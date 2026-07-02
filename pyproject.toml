@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gym-winback-prediction"
+version = "1.0.0"
+description = "Production-grade gym win-back propensity modeling: contact-level features, calibrated LightGBM, expected-value offer selection, SHAP explainability, Streamlit dashboard."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Joao Vitor Cordova" }]
+keywords = ["winback", "mlops", "lightgbm", "shap", "streamlit"]
+
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "scikit-learn>=1.5",
+    "lightgbm>=4.3",
+    "scipy>=1.12",
+    "plotly>=5.20",
+    "shap>=0.45",
+    "pydantic>=2.7",
+    "loguru>=0.7",
+    "pyyaml>=6.0",
+    "joblib>=1.4",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.35"]
+dev = ["pytest>=8.0", "kaleido>=0.2"]
+
+[project.scripts]
+gym-winback = "gym_winback.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+filterwarnings = [
+    "ignore::FutureWarning",
+    "ignore::UserWarning",
+    "ignore::pandas.errors.PerformanceWarning",
+]

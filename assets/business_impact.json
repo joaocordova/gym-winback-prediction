@@ -1,0 +1,64 @@
+{
+  "test_window_start": "2026-02-28",
+  "currency": "USD",
+  "portfolio": {
+    "contacts_scored": 3424,
+    "former_members": 2477,
+    "observed_reactivation_rate": 0.0949,
+    "avg_monthly_fee": 61.26
+  },
+  "campaign_at_optimal_threshold": {
+    "threshold": 0.07833622975685214,
+    "n_scored": 3424,
+    "n_flagged": 1519,
+    "flagged_fraction": 0.4436,
+    "reactivations_captured": 254,
+    "precision": 0.1672,
+    "recall": 0.7815,
+    "recovered_revenue": 51260.56,
+    "campaign_cost": 27342.0,
+    "expected_profit": 23918.56,
+    "roi": 0.87
+  },
+  "campaign_top_quintile": {
+    "threshold": 0.1486893562169784,
+    "n_scored": 3424,
+    "n_flagged": 685,
+    "flagged_fraction": 0.2001,
+    "reactivations_captured": 157,
+    "precision": 0.2292,
+    "recall": 0.4831,
+    "recovered_revenue": 31294.08,
+    "campaign_cost": 12330.0,
+    "expected_profit": 18964.08,
+    "roi": 1.54
+  },
+  "random_targeting_baseline": {
+    "n_flagged": 685,
+    "expected_profit": 1219.28
+  },
+  "blanket_campaign_baseline": {
+    "threshold": 0.0,
+    "n_scored": 3424,
+    "n_flagged": 3424,
+    "flagged_fraction": 1.0,
+    "reactivations_captured": 325,
+    "precision": 0.0949,
+    "recall": 1.0,
+    "recovered_revenue": 65601.96,
+    "campaign_cost": 61632.0,
+    "expected_profit": 3969.96,
+    "roi": 0.06
+  },
+  "model_uplift_vs_random": 17744.8,
+  "assumptions": {
+    "expected_stay_months": 4.0,
+    "contact_cost": 18.0,
+    "offer_costs": {
+      "none": 0.0,
+      "discount_20": 37.0,
+      "free_month": 62.0,
+      "personal_trainer": 45.0
+    }
+  }
+}

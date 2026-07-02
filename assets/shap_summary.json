@@ -1,0 +1,23 @@
+{
+  "base_value_logodds": -2.6747211994731095,
+  "n_rows_explained": 2500,
+  "mean_abs_shap": {
+    "cancel_reason": 0.5091,
+    "days_since_cancel": 0.31303,
+    "n_prior_contacts": 0.18604,
+    "visits_30d_precancel": 0.149,
+    "offer": 0.14112,
+    "channel": 0.12257,
+    "tenure_days": 0.10575,
+    "visits_90d_precancel": 0.08332,
+    "active_weeks_ratio_12w": 0.05983,
+    "visit_decline_ratio": 0.05749,
+    "class_ratio_precancel": 0.04014,
+    "age": 0.03782,
+    "monthly_fee": 0.03579,
+    "referral_source": 0.0305,
+    "plan_type": 0.02242,
+    "visits_per_week_90d": 0.01859,
+    "gender": 0.01244
+  }
+}

@@ -1,0 +1,56 @@
+# =============================================================================
+# gym-winback-prediction — central configuration
+# Every tunable of the system lives here. Loaded and validated by
+# `gym_winback.config.load_config()` (Pydantic-typed, fail-fast on bad values).
+# =============================================================================
+
+project:
+  name: gym-winback-prediction
+  random_seed: 7
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  sample_dir: data/sample
+  models_dir: models
+  assets_dir: assets
+  img_dir: assets/img
+  experiments_dir: experiments
+  logs_dir: logs
+
+# Synthetic winback pilot: former members cancelled across the window, then
+# contacted by a randomized winback campaign (channel × offer). See
+# docs/data_generation.md for the generative assumptions.
+simulation:
+  n_former_members: 9000
+  window_start: "2025-07-01"   # earliest cancellation
+  window_end: "2026-04-30"     # latest contact date (60d outcome window follows)
+
+# Temporal split on the contact date: the model is trained on older campaign
+# waves and evaluated on the most recent ones (train on the past, test on the
+# future — no leakage).
+split:
+  train_end: "2026-02-28"      # contacts on/before -> train; after -> test
+  label_horizon_days: 60       # reactivation counted within this window
+
+training:
+  cv_folds: 3
+  n_search_iter: 20
+  scoring: average_precision   # PR-AUC — the right objective for a ~13% positive class
+  validation_fraction: 0.20    # grouped by member_id to prevent identity leakage
+  calibration: auto            # auto = keep Platt scaling only if it improves Brier
+
+# Financial levers that turn reactivation probabilities into dollars.
+# Conservative industry defaults — override per gym.
+business:
+  currency: USD
+  currency_symbol: "$"
+  avg_monthly_fee: 62.0        # fallback when a member-level fee is unavailable
+  contact_cost: 18.0           # one winback touch (staff phone time, incl. retries)
+  expected_stay_months: 4.0    # paid months a reactivated member stays on average
+  offer_costs:                 # incentive cost if the member reactivates
+    none: 0.0
+    discount_20: 37.0          # ~20% off for 3 months on the average fee
+    free_month: 62.0
+    personal_trainer: 45.0
+  top_fraction: 0.20           # default outreach capacity (top-quintile targeting)
