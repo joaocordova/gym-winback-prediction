@@ -1,17 +1,38 @@
-# 🔁 gym-winback-prediction
+<div align="center">
 
-**Production-grade win-back propensity modeling for cancelled gym members** — an end-to-end ML system that turns a former member's history and a planned outreach into a calibrated 60-day reactivation probability, a SHAP explanation of *why*, and an **expected-value ranking of which offer to send**.
+<img src="assets/img/banner.png" alt="Gym Winback Prediction — end-to-end ML system" width="100%">
 
-![Python](https://img.shields.io/badge/python-3.11-blue)
-![LightGBM](https://img.shields.io/badge/model-LightGBM-green)
-![Tests](https://img.shields.io/badge/tests-61%20passing-brightgreen)
+[![CI](https://github.com/joaocordova/gym-winback-prediction/actions/workflows/ci.yml/badge.svg)](https://github.com/joaocordova/gym-winback-prediction/actions/workflows/ci.yml)
+![Python 3.11](https://img.shields.io/badge/python-3.11-3776AB?logo=python&logoColor=white)
+![LightGBM](https://img.shields.io/badge/LightGBM-calibrated-1baf7a)
+![SHAP](https://img.shields.io/badge/SHAP-explainable-e34948)
+![Streamlit](https://img.shields.io/badge/Streamlit-dashboard-FF4B4B?logo=streamlit&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-> **Headline result (out-of-time campaign waves):** ROC-AUC **0.756** · PR-AUC **0.246** (2.6× the 9.5% base rate) · **3.0× lift** in the top decile. Contacting only the model's top 20% captures **48% of all reactivations** at **1.54× ROI ≈ $19,000 profit per wave** — versus $3,970 for the blanket "contact everyone" campaign and $1,219 for random targeting of the same size.
+**[📸 Dashboard](#-the-dashboard) · [🏗 Architecture](#2-system-architecture) · [📊 Performance](#6-model-performance) · [💰 Business impact](#7-business-impact) · [🚀 Quickstart](#8-quickstart)**
 
-Sibling project: [`gym-churn-prediction`](../gym-churn-prediction) predicts who is *about to* leave; this project handles the members you already lost.
+</div>
 
 ---
+
+> **TL;DR (out-of-time campaign waves):** ROC-AUC **0.756** · PR-AUC **0.246** (2.6× the 9.5% base rate) · **3.0× lift** in the top decile. Contacting only the model's top 20% captures **48% of all reactivations** at **1.54× ROI ≈ $19,000 profit per wave** — versus $3,970 for the blanket "contact everyone" campaign and $1,219 for random targeting of the same size.
+
+🏋️ Sibling project: **[gym-churn-prediction](https://github.com/joaocordova/gym-churn-prediction)** predicts who is *about to* leave; this project handles the members you already lost.
+
+## 📸 The dashboard
+
+The signature view: score a cancelled member and let the **offer optimizer** pick the incentive with the highest expected value — here a *personal-trainer session* wins for a low-usage churner, exactly the interaction the model was supposed to learn:
+
+<img src="assets/img/app_score.png" alt="Score a former member — winback gauge, offer EV ranking and SHAP explanation" width="100%">
+
+Campaign planner — propensity tiers, ranked winback queue and expected wave economics:
+
+<img src="assets/img/app_campaign.png" alt="Campaign planner — propensity tiers and ranked winback queue" width="100%">
+
+```bash
+streamlit run app.py   # → http://localhost:8501
+```
 
 ## 1. Business problem
 
@@ -55,7 +76,7 @@ flowchart LR
 
 **Leakage discipline:** pre-cancel behaviour is frozen at the cancellation date (it can never change afterwards); contact context is known when the contact list is drawn. The split is temporal on the contact date — the model trains on older campaign waves and is evaluated on waves it never saw — and all CV/validation splits are **grouped by member_id**.
 
-**Why offers are learnable:** the simulated pilot **randomizes** channel and offer assignment, so offer effects (and their interaction with the cancellation reason) are identified rather than confounded by prior targeting policy — mirroring how a real winback pilot should be run before deploying a model.
+**Why offers are learnable:** the simulated pilot **randomizes** channel and offer assignment, so offer effects (and their interaction with the cancellation reason) are identified rather than confounded by prior targeting policy — mirroring how a real winback pilot should be run before a model takes over targeting.
 
 ## 3. Tech stack
 
@@ -81,19 +102,26 @@ flowchart LR
 - **Honest simulator** — reactivation propensity decays with time-since-cancel (e-folding ≈ 60 days), relocated members are near-unwinnable, repeat contacts face diminishing returns, and offer × reason interactions (discount ↔ price-churner, PT session ↔ low-usage churner) are baked in for SHAP to find. See [`docs/data_generation.md`](docs/data_generation.md).
 - **Reproducible experiments** — tracked runs under `experiments/`, deterministic under `random_seed`.
 
-## 5. Interactive dashboard
+## 5. Evaluation gallery
 
-```bash
-streamlit run app.py
-```
+All charts are **interactive Plotly HTML** in [`assets/`](assets/) (hover, zoom); PNG snapshots below.
 
-| Tab | What it does |
-|---|---|
-| 🎯 **Score a former member** | Enter a cancelled member + planned contact → winback gauge, propensity tier, **EV ranking of all four offers**, and a SHAP waterfall for that exact contact |
-| 🗺️ **Campaign planner** | Scored test waves: tier mix, ranked winback queue, expected campaign economics |
-| 📊 **Model report** | Headline metrics + all eleven interactive evaluation plots, embedded |
+| | |
+|:---:|:---:|
+| **Offer effectiveness (randomized pilot readout)**<br><img src="assets/img/offer_effectiveness.png" width="100%"> | **Reactivation by reason × recency**<br><img src="assets/img/cohort_winback.png" width="100%"> |
+| **Cumulative gains & lift**<br><img src="assets/img/gains_lift.png" width="100%"> | **SHAP beeswarm — what drives winback**<br><img src="assets/img/shap_beeswarm.png" width="100%"> |
+| **Campaign profit vs threshold**<br><img src="assets/img/profit_curve.png" width="100%"> | **Precision–recall tradeoff**<br><img src="assets/img/pr_curve.png" width="100%"> |
 
-## 6. Model performance (out-of-time test — Mar–Apr 2026 waves, 3,424 contacts)
+<details>
+<summary>Full chart list (11 interactive reports)</summary>
+
+`roc_curve` · `pr_curve` · `calibration_curve` · `confusion_matrix` · `gains_lift` · `profit_curve` · `score_distribution` · `cohort_winback` · `offer_effectiveness` · `shap_importance` · `shap_beeswarm`
+
+</details>
+
+## 6. Model performance
+
+Out-of-time test — Mar–Apr 2026 waves, 3,424 contacts the model never saw:
 
 | Metric | Value | Notes |
 |---|---|---|
@@ -106,20 +134,9 @@ streamlit run app.py
 
 Candidate bake-off (CV PR-AUC): LightGBM 0.264 vs LogisticRegression 0.238 — the boosted model wins on the offer × reason interactions, and the margin is honestly reported in `models/metadata.json`.
 
-<p align="center">
-  <img src="assets/img/offer_effectiveness.png" width="49%" alt="Offer effectiveness by cancellation reason">
-  <img src="assets/img/cohort_winback.png" width="49%" alt="Reactivation by reason and recency">
-</p>
-<p align="center">
-  <img src="assets/img/gains_lift.png" width="49%" alt="Cumulative gains">
-  <img src="assets/img/shap_beeswarm.png" width="49%" alt="SHAP beeswarm">
-</p>
+## 7. Business impact
 
-Interactive versions of all charts (hover, zoom) live in [`assets/`](assets/) — including `offer_effectiveness` (the randomized-pilot readout) and `cohort_winback` (reason × recency heatmap: strike within 3–6 weeks, skip the relocated).
-
-## 7. Business impact (from `assets/business_impact.json`)
-
-On the out-of-time waves (**3,424 contacts to 2,477 former members**, avg fee $61):
+From `assets/business_impact.json` — out-of-time waves (**3,424 contacts to 2,477 former members**, avg fee $61):
 
 | Strategy | Contacts | Reactivations captured | Profit / wave | ROI |
 |---|---|---|---|---|
@@ -133,7 +150,7 @@ On the out-of-time waves (**3,424 contacts to 2,477 former members**, avg fee $6
 ## 8. Quickstart
 
 ```bash
-git clone <repo-url> && cd gym-winback-prediction
+git clone https://github.com/joaocordova/gym-winback-prediction.git && cd gym-winback-prediction
 pip install -e ".[app,dev]"       # or: pip install -r requirements.txt
 
 python -m gym_winback.cli all     # simulate → features → train → evaluate → explain
@@ -151,6 +168,9 @@ docker run -p 8501:8501 gym-winback   # dashboard at http://localhost:8501
 ```
 
 ## 9. Repository layout
+
+<details>
+<summary>Click to expand</summary>
 
 ```
 gym-winback-prediction/
@@ -177,6 +197,8 @@ gym-winback-prediction/
 ├── Dockerfile · Makefile · .github/workflows/ci.yml
 └── requirements.txt · pyproject.toml
 ```
+
+</details>
 
 ## 10. Documentation
 
