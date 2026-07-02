@@ -30,7 +30,7 @@ from gym_winback.features import FEATURE_COLUMNS
 from gym_winback.plotting import SERIES, apply_theme
 from gym_winback.predict import WinbackScorer
 
-st.set_page_config(page_title="Gym Winback Studio", page_icon="🔁", layout="wide")
+st.set_page_config(page_title="Gym Winback Studio", layout="wide")
 
 TIER_COLORS = {"cold": SERIES[0], "warm": SERIES[2], "hot": SERIES[1]}
 
@@ -118,7 +118,7 @@ def main() -> None:
         )
         st.stop()
 
-    st.title("🔁 Gym Winback Studio")
+    st.title("Gym Winback Studio")
     st.caption(
         f"Model: **{scorer.metadata['model_name']}** · trained "
         f"{scorer.metadata['trained_at'][:10]} · profit-optimal threshold "
@@ -127,7 +127,7 @@ def main() -> None:
     )
 
     tab_score, tab_campaign, tab_model = st.tabs(
-        ["🎯 Score a former member", "🗺️ Campaign planner", "📊 Model report"]
+        ["Score a former member", "Campaign planner", "Model report"]
     )
 
     sample = load_sample()
@@ -245,7 +245,7 @@ def main() -> None:
                 probability_gauge(probability, scorer.threshold),
                 use_container_width=True,
             )
-            badge = {"cold": "🧊 COLD", "warm": "🌤️ WARM", "hot": "🔥 HOT"}[tier]
+            badge = {"cold": "COLD", "warm": "WARM", "hot": "HOT"}[tier]
             action = (
                 "**Action:** contact this member — expected recovered revenue "
                 "exceeds outreach cost at this score."
